@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: mevo
+      POSTGRES_PASSWORD: mevo123
+      POSTGRES_DB: mevo_voice_ai
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mevo -d mevo_voice_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres_test:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: mevo_test
+      POSTGRES_PASSWORD: mevo123
+      POSTGRES_DB: mevo_voice_ai_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mevo_test -d mevo_voice_ai_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  postgres_test_data:
